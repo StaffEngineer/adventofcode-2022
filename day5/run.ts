@@ -34,8 +34,14 @@ for (const [amount, from, to] of moves) {
     const fromCrate = crates.get(from)
     const toCrate = crates.get(to)
     let i = 0
+    const tempCrate: string[] = []
     while (i < amount) {
-        toCrate.push(fromCrate.pop())
+        tempCrate.push(fromCrate.pop())
+        i++
+    }
+    i = 0
+    while (i < amount) {
+        toCrate.push(tempCrate.pop())
         i++
     }
 }
