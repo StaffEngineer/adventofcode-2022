@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import * as _ from 'lodash'
 
-const maxSize = 100000
 const input = fs.readFileSync('./input.txt', 'utf-8')
 
 type File = {
@@ -77,6 +76,10 @@ function getSize(node: Node, path: string): number {
     sizes.set(p, size)
     return size
 }
-getSize(root, '')
+const rootSize = getSize(root, '')
 
-console.log(_.sum([...sizes.values()].filter(s => s <= maxSize)))
+const totalSize = 70000000
+const unusedSpaceNeeded = 30000000
+const toDelete = unusedSpaceNeeded - (totalSize - rootSize)
+const minToDelete = Math.min(...[...sizes.values()].filter(size => size >= toDelete))
+console.log(minToDelete)
