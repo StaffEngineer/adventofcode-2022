@@ -58,3 +58,54 @@ for (let c = C-1; c >= 0; c--) {
     }
 }
 console.log(visible.size)
+
+let maxDistance = -Infinity
+
+for (const cellInput of [...visible.values()]) {
+    const [r, c] = (cellInput as string).split(',').map(Number)
+    const cell = trees[r][c]
+    //  0
+    //. 1 .
+    //  .
+    let k = r - 1
+    let upDistance = 0
+    while (k >= 0) {
+        upDistance++
+        if (trees[k][c] >= cell) break
+        k--
+    }
+    //  .
+    //. 1 .
+    //  0
+    k = r + 1
+    let downDistance = 0
+    while (k < R) {
+        downDistance++
+        if (trees[k][c] >= cell) break
+        k++
+    }
+    //  .
+    //0 1 .
+    //  .
+    k = c - 1
+    let leftDistance = 0
+    while (k >=0) {
+        leftDistance++
+        if (trees[r][k] >= cell) break
+        k--
+    }
+    //  .
+    //. 1 0
+    //  .
+    k = c + 1
+    let rightDistance = 0
+    while (k < R) {
+        rightDistance++
+        if (trees[r][k] >= cell) break
+        k++
+    }
+    const distance = rightDistance * leftDistance * upDistance * downDistance
+    maxDistance = Math.max(maxDistance, distance)
+}
+
+console.log(maxDistance)
