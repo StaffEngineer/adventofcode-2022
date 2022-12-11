@@ -14,6 +14,8 @@ type Monkey = {
 
 const state: Map<number, Monkey> = new Map()
 
+let divProduct = 1
+
 function parse(input: string) {
     function parseMonkey(input: string): Monkey {
         function parseOperation(input: string) {
@@ -42,6 +44,7 @@ function parse(input: string) {
         const startingItems = lines[1].match(/\d+/g)!.map(Number)
         const operation = parseOperation(lines[2])
         const divisibleBy = lines[3].match(/\d+/g)!.map(Number)[0]
+        divProduct *= divisibleBy
         const truthy = lines[4].match(/\d+/g)!.map(Number)[0]
         const falthy = lines[5].match(/\d+/g)!.map(Number)[0]
         return {
@@ -65,9 +68,9 @@ parse(input)
 function round() {
     for (let monkey of [...state.values()]) {
         while (monkey.startingItems.length > 0) {
-            const el = monkey.startingItems.shift()
+            let el = monkey.startingItems.shift()!
+            el = el % divProduct
             let newValue = monkey.operation(el)
-            newValue = Math.floor(newValue / 3)
             state.get(monkey.id)!.inspectingItems++
             if (newValue % monkey.divisibleBy === 0) {
                 state.get(monkey.truthy)!.startingItems.push(newValue)
@@ -79,7 +82,7 @@ function round() {
 }
 
 let i = 0
-while (i++ < 20) round()
+while (i++ < 10000) round()
 
 const [monkey1, monkey2] = [...state.values()].sort((a,b) => b.inspectingItems - a.inspectingItems)
 console.log(monkey1.inspectingItems * monkey2.inspectingItems)
