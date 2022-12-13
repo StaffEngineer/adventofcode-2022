@@ -18,6 +18,7 @@
   "homepage": "https://github.com/StaffEngineer/adventofcode-2022#readme",
   "dependencies": {
     "@types/lodash": "^4.14.191",
+    "anychart": "^8.11.0",
     "lodash": "^4.17.21"
   }
 }
