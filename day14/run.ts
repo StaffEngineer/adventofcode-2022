@@ -14,14 +14,18 @@ for (let line of lines) {
     Cmax = Math.max(Cmax, ...rocksPath.map(v => v[0]))
     Cmin = Math.min(Cmin, ...rocksPath.map(v => v[0]))
 }
-
 Cmax -= Cmin
+Cmax += 3*Rmax
 
 const grid: string[][] = []
-for (let r = 0; r <= Rmax; r++) {
+for (let r = 0; r <= Rmax+2; r++) {
     const row: string[] = []
     for (let c = 0; c <= Cmax; c++) {
-        row.push('.')
+        if (r === Rmax+2) {
+            row.push('#')
+        } else {
+            row.push('.')
+        }
     }
     grid.push(row)
 }
@@ -31,7 +35,7 @@ function printGrid() {
 }
 
 function setOnGrid(x: number, y: number, val: string) {
-    grid[y][x-Cmin] = val
+    grid[y][x-Cmin+Rmax] = val
 }
 
 for (const lineOfRocks of rocks) {
@@ -56,7 +60,7 @@ for (const lineOfRocks of rocks) {
     }
 }
 
-const start = [0, 500-Cmin]
+const start = [0, 500-Cmin+Rmax]
 
 grid[start[0]][start[1]] = '+'
 
@@ -95,10 +99,11 @@ function sandDrop(start: number[]) {
         let [x, y] = start
         const [stopX, stopY] = step(x, y)
         if (stopX === -1 && stopY === -1) break
+        if (grid[stopX][stopY] === 'o') break
         grid[stopX][stopY] = 'o'
         sandPos.push([stopX, stopY])
     }
-    console.log(sandPos.length)
+    // console.log(sandPos.length)
 }
 
 sandDrop(start)
