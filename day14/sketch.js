@@ -7,6 +7,7 @@ function setup() {
   const grid = globalState.grid
   const w = globalState.w
   sandDrop(JSON.parse(JSON.stringify(globalState.grid)), globalState.start)
+  globalState.changes = globalState.changes.reverse()
   createCanvas(grid[0].length * w, grid.length * w);
 }
 
@@ -30,8 +31,10 @@ function draw() {
             }
 		}
 	}
-    if (globalState.changes.length > 0) {
-        const [x,y, change] = globalState.changes.shift()
+    const N = 1000
+    let i = 0
+    while (globalState.changes.length > 0 && i < N) {
+        const [x,y, change] = globalState.changes.pop()
         stroke(0);
         const c = color(205, 170, 109);
         fill(c)
@@ -39,6 +42,7 @@ function draw() {
         if (change) {
             grid[x][y] = 'o'
         }
+        i++
     }
 }
 
