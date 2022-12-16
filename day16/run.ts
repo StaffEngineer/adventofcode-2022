@@ -27,26 +27,33 @@ for (let line of lines) {
 let maxPressure = 0
 let iterMax = 10000000000
 for (let i = 0; i < iterMax; i++) {
-    let previous = 'AA'
-    let current = 'AA'
+    let previous = ['AA','AA']
+    let current = ['AA','AA']
     let opened = new Set()
-    let minutes = 30
+    let minutes = 26
     let pressure = 0
     while (minutes >= 0) {
-        let valve = state.get(current)
-        if (valve.flow !== 0 && !opened.has(current) && Math.random() > 0.15) {
-            minutes -= 1
-            opened.add(current)
-            pressure += minutes*valve.flow
+        for (let move = 0; move < 2; move++) {
+            let valve = state.get(current[move])
+            if (valve.flow !== 0 && !opened.has(current[move]) && Math.random() > 0.15) {
+                opened.add(current[move])
+                pressure += (Math.max(0, minutes-1))*valve.flow
+            } else {
+                let choices = [...valve.adj]
+                let idx = choices.findIndex(el => el === previous[move])
+                if (Math.random() > 0.05 && idx !== -1 && choices.length > 1) {
+                    choices[idx] = choices[choices.length-1]
+                    choices.pop()
+                }
+                idx = choices.findIndex(el => el === current[0])
+                if (move === 1 && Math.random() > 0.20 && idx !== -1 && choices.length > 1) {
+                    choices[idx] = choices[choices.length-1]
+                    choices.pop()
+                }
+                previous[move] = current[move]
+                current[move] = choices[Math.floor(Math.random() * choices.length)]
+            }
         }
-        let choices = [...valve.adj]
-        if (Math.random() > 0.05 && choices.includes(previous) && choices.length > 1) {
-            const index = choices.findIndex(el => el === previous)
-            choices[index] = choices[choices.length-1]
-            choices.pop()
-        }
-        previous = current
-        current = choices[Math.floor(Math.random() * choices.length)]
         minutes -= 1
     }
     if (pressure >= maxPressure) {
