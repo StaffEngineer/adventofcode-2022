@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as _ from 'lodash'
 
-const input = fs.readFileSync('./test_input.txt', 'utf-8')
+const input = fs.readFileSync('./input.txt', 'utf-8')
 
 const grid = Array(7).fill(0).map(_ => Array(7).fill('.'))
 
@@ -100,17 +100,51 @@ function adjustGrid(figure: number[][]): void {
 }
 
 let n = 0
-const N = 1000000000000
+const N = 1585
+const cycle = new Map()
 while (n < N) {
     const figure = figuresGen.next().value as number[][]
     putFigure(figure)
     // console.log('-------')
     // printGrid()
+    const hashCode = getRowHash()
+    if (cycle.get(hashCode)) {
+        cycle.get(hashCode).add([grid.length-7, n].toString())
+    } else {
+        cycle.set(hashCode, new Set().add([grid.length-7, n].toString()))
+    }
     n++
 }
 
-console.log(grid.length - 7)
+console.log(grid.length-7)
+
+for (const v of cycle.values()) {
+    if (v.size > 2) {
+        console.log(v)
+    }
+}
+
+function getRowHash() {
+    const res: number[][] = []
+    for (let i = 7; i < 2590; i++) {
+        res.push(grid[i])
+    }
+    return hashCode(res.toString())
+}
+
+function hashCode(str: string) {
+    let hash = 0
+    let chr: number
+    if (str.length === 0) return hash;
+    for (let i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
 
 function printGrid() {
+    // fs.writeFileSync('./a.txt', grid.map(r => r.join('')).join('\n'))
     console.log(grid.map(r => r.join('')).join('\n'))
 }
