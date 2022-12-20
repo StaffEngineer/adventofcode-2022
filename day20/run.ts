@@ -12,7 +12,9 @@ type Node = {
     prev: Node
 }
 
-let node = { val: items[0], next: null as any as Node, prev: null as any as Node, originNext: null as any as Node }
+const decryptedKey = 811589153
+
+let node = { val: decryptedKey * items[0], next: null as any as Node, prev: null as any as Node, originNext: null as any as Node }
 node.next = node
 node.originNext = node
 node.prev = node
@@ -20,7 +22,7 @@ node.prev = node
 let i = 1
 const root = node
 while (i < items.length) {
-    const newNode = { val: items[i], next: null as any as Node, prev: null as any as Node, originNext: null as any as Node }
+    const newNode = { val: decryptedKey * items[i], next: null as any as Node, prev: null as any as Node, originNext: null as any as Node }
     newNode.prev = node
     node.next = newNode
     node.originNext = newNode
@@ -38,7 +40,7 @@ function connect(a: Node, b: Node) {
 
 i = 0
 let cur = root
-while (i < items.length) {
+while (i < items.length * 10) {
     let val = cur.val % (items.length - 1)
     if (val > 0) {
         let tmp = cur
