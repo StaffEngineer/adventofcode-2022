@@ -17,14 +17,39 @@ for (let line of input.split('\n')) {
     }
 }
 
-function dfs(node: Node): number {
+function dfs(node: Node, isRoot: boolean = false): number {
+    if (node.id === 'humn') return HUMAN
     if ('val' in node) return node.val
     const first = dfs(store.get(node.first))
     const second = dfs(store.get(node.second))
+    if (isRoot) {
+        if (first === second) return 0
+        if (first > second) return -1
+        if (first < second) return 1
+    }
     if (node.op === '+') return first + second
     if (node.op === '*') return first * second
     if (node.op === '/') return first / second
     if (node.op === '-') return first - second
     return Infinity
 }
-console.log(dfs(store.get('root')))
+
+let HUMAN = -1
+function binarySearch(l: number, r: number) {
+    while (l <= r) {
+        const middle = Math.floor((r + l) / 2)
+        HUMAN = middle
+        const res = dfs(store.get('root'), true)
+        if (res === -1) {
+            l = middle
+        }
+        if (res === 1) {
+            r = middle - 1
+        }
+        if (res === 0) {
+            return HUMAN
+        }
+    }
+}
+
+console.log(binarySearch(0, Number.MAX_SAFE_INTEGER))
