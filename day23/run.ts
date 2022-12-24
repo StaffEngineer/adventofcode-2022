@@ -1,9 +1,9 @@
-import { assert } from 'console'
 import * as fs from 'fs'
+import * as _ from 'lodash'
 
 let input = fs.readFileSync('./input.txt', 'utf-8').split('\n')
 
-const EXTEND = 10
+const EXTEND = 10000
 
 const R = input.length + 2 * EXTEND
 const C = input[0].length + 2 * EXTEND
@@ -52,7 +52,7 @@ function printGrid() {
 
 // printGrid()
 
-const Rounds = 10
+const Rounds = 1000000000000
 let r = 0
 
 const order = directionOrder()
@@ -113,6 +113,7 @@ while (r < Rounds) {
     }
     const newElfs = getNewElfs(newPos)
     updateGrid(newElfs)
+    if (_.isEqual(newElfs, elfs)) { console.log(r+1); break }
     elfs = newElfs
     r++
     // console.log(`Round ${r}`)
@@ -135,4 +136,4 @@ function calcEmpty() {
     return (maxRow - minRow + 1) * (maxCol - minCol + 1) - elfs.size
 }
 
-console.log(calcEmpty())
+// console.log(calcEmpty())
