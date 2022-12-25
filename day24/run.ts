@@ -11,7 +11,8 @@ for (let r = 0; r < initialGrid.length; r++) {
         }
     }
 }
-initialGrid[initialGrid.length-1][initialGrid[0].length-2] = 'Q'
+const start = [0,1]
+const end = [initialGrid.length-1, initialGrid[0].length-2]
  
 function getNewGrid(grid: string[][], blizzards: [number, number, string][]) {
     const R = grid.length
@@ -65,12 +66,12 @@ const visited = new Set()
 
 const state = new Map().set(0, [initialGrid, blizzards])
 
-function bfs(start: [number,number,number,number[][]]): [number, number[][]] {
-    const queue = [start]
+function bfs(start: number[], end: number[], p: number[][], startTime: number): [number, number[][]] {
+    const queue: Array<[number, number, number, number[][]]> = [[start[0], start[1], startTime, p]]
     while (queue.length > 0) {
         const [x,y,l,path] = queue.shift()!
         const [grid,] = state.get(l)
-        if (grid[x][y] === 'Q') { return [l, path] }
+        if (x === end[0] && y === end[1]) { return [l, path] }
         if (visited.has([x,y,l].toString())) continue
         visited.add([x,y,l].toString())
         let newG = grid
@@ -87,11 +88,14 @@ function bfs(start: [number,number,number,number[][]]): [number, number[][]] {
     return [Infinity, []]
 }
 
-const [minutes, moves] = (bfs([0,1,0,[]]))
+const [minutes, moves] = bfs(start, end, [], 0)
+const [minutes2, moves2] = bfs(end, start, moves, minutes)
+const [minutes3, moves3] = bfs(start, end, moves2, minutes2)
 
-moves.forEach(([x,y]) => initialGrid[x][y] = 'K')
+
+// moves.forEach(([x,y]) => initialGrid[x][y] = 'K')
 // printGrid(initialGrid)
-console.log('time:', minutes)
+console.log('time:', minutes3)
 
 // TODO: p5.js visualize
 // for (const [key,val] of state.entries()) {
