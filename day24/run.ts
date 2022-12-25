@@ -96,9 +96,3 @@ const [minutes3, moves3] = bfs(start, end, moves2, minutes2)
 // moves.forEach(([x,y]) => initialGrid[x][y] = 'K')
 // printGrid(initialGrid)
 console.log('time:', minutes3)
-
-// TODO: p5.js visualize
-// for (const [key,val] of state.entries()) {
-//     console.log(`minute ${key}`)
-//     printGrid(val[0])
-// }
